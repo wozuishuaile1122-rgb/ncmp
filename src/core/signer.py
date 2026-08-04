@@ -12,6 +12,7 @@ from Crypto.Cipher import AES
 
 from ..utils.config import Config
 from ..utils.logger import Logger
+from ..utils.comments import CommentGenerator
 
 
 class Signer:
@@ -98,7 +99,7 @@ class Signer:
                 "score": score,
                 "tags": tag,
                 "customTags": "%5B%5D",
-                "comment": "",
+                "comment": CommentGenerator.generate(score),
                 "syncYunCircle": "true",
                 "csrf_token": csrf
             }
