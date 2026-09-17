@@ -13,6 +13,7 @@ from Crypto.Cipher import AES
 from ..utils.config import Config
 from ..utils.logger import Logger
 from ..utils.comments import CommentGenerator
+from ..core.comment_poster import CommentPoster
 
 
 class Signer:
@@ -124,6 +125,12 @@ class Signer:
             
             if response["code"] == 200:
                 self.logger.info(f'{work["name"]}「{work["authorName"]}」评分完成：{score}分')
+                # 评分成功后发布留言获取积分
+                try:
+                    poster = CommentPoster(self.session, self.logger, self.config)
+                    poster.post_comment(work, score)
+                except Exception as ce:
+                    self.logger.warning(f"留言失败（不影响评分）：{str(ce)}")
             else:
                 error_msg = response.get('message') or response.get('msg', '未知错误')
                 if "频繁" in error_msg:
